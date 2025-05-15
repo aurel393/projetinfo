@@ -12,6 +12,7 @@ int main(void) {
     reponse= menu(); //demande à l'utilisateur son choix
     if (reponse ==1) reponse = mode(s);//récupère le mode de jeu et la taille du plateau si l'utilisateur a choisi de jouer
     user= rand()%2 +1;
+    test;
 
     printf("%d %d %d", reponse, *s,user);//test
 
