@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "sauvegarde.h"
-#include "game.h"
+#include "menu.h"
 #include "conquete.h"
 
 void gametest(Plateau *p, int j1)
@@ -53,7 +53,6 @@ void gametest(Plateau *p, int j1)
 
         // Mise à jour du plateau
         strcpy(p->cases[pos1.ligne - 1][pos1.colonne - 1], piece1.symbole);
-        deplacement(p,piece1,pos1);
 
         // Affichage
         afficher_plateau(*p);
@@ -74,6 +73,6 @@ void gametest(Plateau *p, int j1)
     }
     if (etat_partie == 3)
     {
-        sauvegarde("save.txt",p,j1,mode,cpj1,cpj2);
+        sauvegarde(p,j1,mode,cpj1,cpj2);
     }
 }

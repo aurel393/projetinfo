@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "menu.h"
-#include "start.h"
 #include <time.h>
 #include "board.h"
 #include "gametest.h"
@@ -28,11 +27,14 @@ int main(void) {
             modejeu = mode(s); //récupère le mode de jeu et la taille du plateau si l'utilisateur a choisi de jouer
             user = rand()%2; //défini aléatoirement quel joueur commmence
             p.taille = size;
+            initialiser_plateau(&p);
+            initialiser_compteur(&cpj1);
+            initialiser_compteur(&cpj2);
         }
         else chargement(&p, &user, &modejeu, &cpj1,&cpj2); //quand on veut charger une partie
         
         if (modejeu ==1) gametest(&p,user);
-        //if (modejeu == 2) conquete(&p,user);
+        if (modejeu == 2) conquete(&p,user, cpj1, cpj2);
         //if (modejeu == 3) connecte(&p,user);
 
     }

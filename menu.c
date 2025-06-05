@@ -3,6 +3,8 @@
 //
 //premier menu de base
 #include <stdio.h>
+#include "board.h"
+#include "menu.h"
 
 int menu() {
     int rep,rep2;
@@ -12,5 +14,42 @@ int menu() {
         printf("Veuillez entrer votre choix: 1,2 ou 3\n"); //message d'erreur
         scanf("%d", &rep);
     }
+    return rep;
+}
+
+int mode(int *size) {
+    int choix;
+    printf("Quel mode de jeu voulez vous choisir ?\n 1) Test\n 2) Conquete\n 3) Connecte\n");
+    scanf("%d",&choix);
+    while(choix <1 || choix>3) {
+        printf("Veuillez entrer votre choix: entre 1 et 3\n"); //message d'erreur
+        scanf("%d", &choix);
+    }
+    printf("Quelle taille d'echiquier voulez-vous ?\n (entre 6x6 et 12x12)\n");
+    scanf("%d", size);
+    while(*size <6 || *size>12) {
+        printf("Veuillez entrer votre choix entre 6 et 12\n"); //message d'erreur
+        scanf("%d", size);
+    }
+    return choix;
+}
+
+int menu_jeu(Joueur j){
+    int rep;
+    if (j==BLANC) printf("C'est au tour des blancs\n");
+    else printf("C'est au tour des noirs\n");
+
+    printf("Que voulez vous faire ? \n");
+    printf("1) Poser une pièce \n");
+    printf("2) Abandonner \n");
+    printf("3) Sauvegarder la partie \n");
+    scanf("%d", &rep);
+    while (rep <1 || rep>3)
+    {
+        printf("Veuillez entrer votre choix: 1,2 ou 3\n");
+        scanf("%d", &rep);
+    }
+    if (rep == 3) printf("Sauvegarde en cours...\n");
+    //fonction de sauvegarde
     return rep;
 }

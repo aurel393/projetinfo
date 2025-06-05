@@ -40,7 +40,7 @@ int chargement(Plateau *p, int *joueur, int *mode, CompteurPiece *cpj1, Compteur
         return -1;
     }
     
-    // Lecture du plateau
+    // Lecture du plateau A MODIFIER NE RECHARGE PAS LES ESPACES APRES LES POINTS
     for (int i = 0; i < p->taille; i++) {
         for (int j = 0; j < p->taille; j++) {
             static char temp[10]; // buffer temporaire pour les symboles
@@ -77,9 +77,9 @@ int chargement(Plateau *p, int *joueur, int *mode, CompteurPiece *cpj1, Compteur
 }
 
 
-int sauvegarde(const char *nom_fichier, Plateau *p, int joueurencours, int mode, CompteurPiece cpj1, CompteurPiece cpj2)
+int sauvegarde(Plateau *p, int joueurencours, int mode, CompteurPiece cpj1, CompteurPiece cpj2)
 {
-    FILE *fichier = fopen(nom_fichier, "w");
+    FILE *fichier = fopen("save.txt", "w");
 
     if (fichier == NULL) {
         printf("Erreur lors de l'ouverture du fichier \n");

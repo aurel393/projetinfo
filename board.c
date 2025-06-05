@@ -11,7 +11,7 @@ void initialiser_plateau(Plateau* p)
 {
     for (int i = 0; i < p->taille; i++) {
         for (int j = 0; j < p->taille; j++) {
-            p->cases[i][j] = strdup(".");//met des points sur le plateau
+            p->cases[i][j] = strdup(". ");
         }
     }
 }
@@ -62,7 +62,7 @@ void afficher_plateau(Plateau p) {
 
 const char* symboles[2][6] = {
     // JOUEUR1 (noir)
-    { "♙", "♖", "♘", "♗", "♕", "♔" },
+    { "♙ ", "♖ ", "♘ ", "♗ ", "♕ ", "♔ " },
     // JOUEUR2 (blanc)
-    { "♟", "♜", "♞", "♝", "♛", "♚" }
+    { "♟ ", "♜ ", "♞ ", "♝ ", "♛ ", "♚ " }
 };

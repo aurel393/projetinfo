@@ -5,8 +5,10 @@
 #ifndef CONQUETE_H
 #define CONQUETE_H
 #include "board.h"
+#include "compteur.h"
 
-int deplacement(Plateau *p, Piece piece, Position position);
-
+void deplacement(Plateau *p, Piece piece, Position position);
+void conquete(Plateau *p, int j1, CompteurPiece cpj1, CompteurPiece cpj2);
+void comptage(Plateau *p);
 
 #endif //CONQUETE_H
