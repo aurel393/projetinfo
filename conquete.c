@@ -48,8 +48,8 @@ void conquete(Plateau *p, int j1, CompteurPiece cpj1, CompteurPiece cpj2)
             if ((cpj1.compt[piece.type] != 0 && j==BLANC ) || (cpj2.compt[piece.type] != 0 && j==NOIR))//vérifie qu'on puisse encore poser des pièces
             {
                 strcpy(p->cases[pos1.ligne-1][pos1.colonne-1], piece.symbole);//met à jour le plateau
-                deplacement(p,piece,pos1);
-                if (j==BLANC) compteur(&cpj1,piece.type);
+                deplacement(p,piece,pos1);//fonction qui gère les cases sur lesquelles les pièces peuvent se déplacer
+                if (j==BLANC) compteur(&cpj1,piece.type);//met à jour le compteur en fonction du joueur
                 else compteur(&cpj2,piece.type);
                 afficher_plateau(*p);
                 while (i<=5)//vérifie si les compteurs sont à 0
@@ -89,7 +89,7 @@ void conquete(Plateau *p, int j1, CompteurPiece cpj1, CompteurPiece cpj2)
     }
     if (choix==3)
     {
-        sauvegarde(p,j,2,cpj1,cpj2);
+        sauvegarde(p,j,1,cpj1,cpj2);
     }
 }
 

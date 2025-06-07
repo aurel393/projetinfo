@@ -8,8 +8,6 @@ add_executable(projetinfo main.c
         menu.c
         board.c
         board.h
-        gametest.c
-        gametest.h
         compteur.c
         compteur.h
         conquete.c

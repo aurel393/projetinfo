@@ -1,7 +1,6 @@
 //
 // Created by apinsell on 12/05/2025.
 //
-//premier menu de base
 #include <stdio.h>
 #include "board.h"
 #include "menu.h"
@@ -19,9 +18,9 @@ int menu() {
 
 int mode(int *size) {
     int choix;
-    printf("Quel mode de jeu voulez vous choisir ?\n 1) Test\n 2) Conquete\n 3) Connecte\n");
+    printf("Quel mode de jeu voulez vous choisir ?\n 1) Conquete\n 2) Connecte\n");
     scanf("%d",&choix);
-    while(choix <1 || choix>3) {
+    while(choix <1 || choix>2) {
         printf("Veuillez entrer votre choix: entre 1 et 3\n"); //message d'erreur
         scanf("%d", &choix);
     }

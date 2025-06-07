@@ -3,16 +3,14 @@
 #include "menu.h"
 #include <time.h>
 #include "board.h"
-#include "gametest.h"
 #include "sauvegarde.h"
 #include "conquete.h"
 
 
 int main(void) {
     srand(time(0));
-
     int reponse,size,user,modejeu;
-    int *s = &size; //pointeur pour récupérer la taille du plateau
+    int *s = &size;
     Plateau p;
     FILE *save;
     CompteurPiece cpj1,cpj2;
@@ -31,11 +29,17 @@ int main(void) {
             initialiser_compteur(&cpj1);
             initialiser_compteur(&cpj2);
         }
-        else chargement(&p, &user, &modejeu, &cpj1,&cpj2); //quand on veut charger une partie
-        
-        if (modejeu ==1) gametest(&p,user);
-        if (modejeu == 2) conquete(&p,user, cpj1, cpj2);
-        //if (modejeu == 3) connecte(&p,user);
+        else
+        {
+            chargement(&p, &user, &modejeu, &cpj1,&cpj2); //quand on veut charger une partie
+            afficher_plateau(p);
+        }
+        if (modejeu ==1)
+            {
+            conquete(&p,user, cpj1, cpj2);
+            return 0;
+            }
+        //if (modejeu == 2)
 
     }
     else if (reponse == 3)

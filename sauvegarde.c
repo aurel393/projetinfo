@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "compteur.h"
 #include "board.h"
 
@@ -50,6 +49,7 @@ int chargement(Plateau *p, int *joueur, int *mode, CompteurPiece *cpj1, Compteur
                 return -1;
             }
             // Alloue et copie le symbole
+            if (strcmp(temp, ".")==0) strcpy(temp, ". ");
             p->cases[i][j] = strdup(temp);
         }
     }

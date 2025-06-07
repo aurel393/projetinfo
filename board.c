@@ -44,8 +44,8 @@ TypePiece conversion_type(const char* saisie) {
 }
 
 Joueur conversion_joueur(int j1) { // convertis un int du joueur en enum pour aller dans la structure
-    if (j1 == 1) return BLANC;
-    else return NOIR;
+    if (j1 == 1) return NOIR;
+    else return BLANC;
 }
 
 
