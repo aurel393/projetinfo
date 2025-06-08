@@ -26,6 +26,7 @@ typedef struct {
 typedef struct {
     int taille;
     char* cases[MAX_TAILLE][MAX_TAILLE];
+    TypePiece types_capture[MAX_TAILLE][MAX_TAILLE];
 } Plateau;
 
 typedef struct
@@ -37,6 +38,7 @@ typedef struct
 void initialiser_plateau(Plateau* p);//met des points dans toutes les cases du tableau
 void afficher_plateau(Plateau p);//affiche le tableau
 void definir_symbole(Piece* p);//conversion dy symbole
+void initialiser_tableau_capture(Plateau *p);
 TypePiece conversion_type(const char* saisie);
 extern const char* symboles[2][6];
 Joueur conversion_joueur(int j1);

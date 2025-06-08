@@ -65,10 +65,11 @@ void conquete(Plateau *p, int j1, CompteurPiece cpj1, CompteurPiece cpj2)
                 }
                 if (exit==1) break;
                 i=0;
-                choix=menu_jeu(j);
-                //changement des couleurs
                 if (j==BLANC) j=NOIR;
                 else j=BLANC;
+                choix=menu_jeu(j);
+                //changement des couleurs
+
             }
             else
             {
@@ -84,8 +85,8 @@ void conquete(Plateau *p, int j1, CompteurPiece cpj1, CompteurPiece cpj2)
     }
     if (choix==2)
     {
-        if (j==1) printf("Fin de partie ! Les noirs ont gagnés");
-        else printf("Fin de partie ! Les blancs ont gagnés");
+        if (j==1) printf("Fin de partie ! Les noirs ont gagnés\n");
+        else printf("Fin de partie ! Les blancs ont gagnés\n");
     }
     if (choix==3)
     {
@@ -123,11 +124,12 @@ void deplacement(Plateau *p, Piece piece, Position position)
         {
             if (piece.joueur == NOIR)
             {
-                if (i-1>0)
+                if (i>0)
                 {
                     if (strcmp(p->cases[i-1][j],". ") == 0 || strcmp(p->cases[i-1][j],"◽") == 0 || strcmp(p->cases[i-1][j],"◾")==0)
                     {
                         strcpy(p->cases[i-1][j],"◽");
+                        p->types_capture[i-1][j]=PION;
                     }
                     else break;
                 }
@@ -139,6 +141,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                     if (strcmp(p->cases[i + 1][j], ". ") == 0 || strcmp(p->cases[i + 1][j], "◽") == 0 || strcmp(p->cases[i + 1][j], "◾") == 0)
                     {
                         strcpy(p->cases[i + 1][j], "◾");
+                        p->types_capture[i+1][j]=PION;
                     }
                     else break;
                 }
@@ -155,6 +158,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 {
                     if (piece.joueur == BLANC) strcpy(p->cases[k-1][j],"◾");
                     else strcpy(p->cases[k-1][j] ,"◽");
+                    p->types_capture[k-1][j]=TOUR;
                     k--;
                 }
                 else break;
@@ -166,6 +170,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 {
                     if (piece.joueur == BLANC) strcpy(p->cases[k + 1][j], "◾");
                     else strcpy(p->cases[k + 1][j], "◽");
+                    p->types_capture[k+1][j]=TOUR;
                     k++;
                 }
                 else break;
@@ -176,10 +181,9 @@ void deplacement(Plateau *p, Piece piece, Position position)
             {
                 if (strcmp(p->cases[i][k - 1], ". ") == 0 || strcmp(p->cases[i][k - 1], "◽") == 0 || strcmp(p->cases[i][k - 1], "◾") == 0)
                 {
-                    if (piece.joueur == BLANC)
-                        strcpy(p->cases[i][k - 1], "◾");
-                    else
-                        strcpy(p->cases[i][k - 1], "◽");
+                    if (piece.joueur == BLANC) strcpy(p->cases[i][k - 1], "◾");
+                    else strcpy(p->cases[i][k - 1], "◽");
+                    p->types_capture[i][k-1]=TOUR;
                     k--;
                 }
                 else break;
@@ -189,10 +193,9 @@ void deplacement(Plateau *p, Piece piece, Position position)
             {
                 if (strcmp(p->cases[i][k + 1], ". ") == 0 || strcmp(p->cases[i][k + 1], "◽") == 0 || strcmp(p->cases[i][k + 1], "◾") == 0)
                 {
-                    if (piece.joueur == BLANC)
-                        strcpy(p->cases[i][k + 1], "◾");
-                    else
-                        strcpy(p->cases[i][k + 1], "◽");
+                    if (piece.joueur == BLANC) strcpy(p->cases[i][k + 1], "◾");
+                    else strcpy(p->cases[i][k + 1], "◽");
+                    p->types_capture[i][k+1]=TOUR;
                     k++;
                 }
                 else break;
@@ -208,12 +211,14 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 {
                     if (piece.joueur == BLANC) strcpy(p->cases[i+1][j+2],"◾");
                     else strcpy(p->cases[i+1][j+2] ,"◽");
+                    p->types_capture[i+1][j+2]=CAVALIER;
                 }
             }
             if (i - 2 >= 0 && j - 1 >= 0) {
                 if (strcmp(p->cases[i-2][j-1], ". ") == 0 || strcmp(p->cases[i-2][j-1], "◽") == 0 || strcmp(p->cases[i-2][j-1], "◾") == 0) {
                     if (piece.joueur == BLANC) strcpy(p->cases[i-2][j-1], "◾");
                     else strcpy(p->cases[i-2][j-1], "◽");
+                    p->types_capture[i-2][j-1]=CAVALIER;
                 }
             }
 
@@ -222,6 +227,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 if (strcmp(p->cases[i-2][j+1], ". ") == 0 || strcmp(p->cases[i-2][j+1], "◽") == 0 || strcmp(p->cases[i-2][j+1], "◾") == 0) {
                     if (piece.joueur == BLANC) strcpy(p->cases[i-2][j+1], "◾");
                     else strcpy(p->cases[i-2][j+1], "◽");
+                    p->types_capture[i-2][j+1]=CAVALIER;
                 }
             }
 
@@ -230,6 +236,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 if (strcmp(p->cases[i-1][j-2], ". ") == 0 || strcmp(p->cases[i-1][j-2], "◽") == 0 || strcmp(p->cases[i-1][j-2], "◾") == 0) {
                     if (piece.joueur == BLANC) strcpy(p->cases[i-1][j-2], "◾");
                     else strcpy(p->cases[i-1][j-2], "◽");
+                    p->types_capture[i-1][j-2]=CAVALIER;
                 }
             }
 
@@ -246,6 +253,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 if (strcmp(p->cases[i+1][j-2], ". ") == 0 || strcmp(p->cases[i+1][j-2], "◽") == 0 || strcmp(p->cases[i+1][j-2], "◾") == 0) {
                     if (piece.joueur == BLANC) strcpy(p->cases[i+1][j-2], "◾");
                     else strcpy(p->cases[i+1][j-2], "◽");
+                    p->types_capture[i+1][j-2]=CAVALIER;
                 }
             }
 
@@ -254,6 +262,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 if (strcmp(p->cases[i+1][j+2], ". ") == 0 || strcmp(p->cases[i+1][j+2], "◽") == 0 || strcmp(p->cases[i+1][j+2], "◾") == 0) {
                     if (piece.joueur == BLANC) strcpy(p->cases[i+1][j+2], "◾");
                     else strcpy(p->cases[i+1][j+2], "◽");
+                    p->types_capture[i+1][j+2]=CAVALIER;
                 }
             }
 
@@ -262,6 +271,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 if (strcmp(p->cases[i+2][j-1], ". ") == 0 || strcmp(p->cases[i+2][j-1], "◽") == 0 || strcmp(p->cases[i+2][j-1], "◾") == 0) {
                     if (piece.joueur == BLANC) strcpy(p->cases[i+2][j-1], "◾");
                     else strcpy(p->cases[i+2][j-1], "◽");
+                    p->types_capture[i+2][j-1]=CAVALIER;
                 }
             }
 
@@ -270,6 +280,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 if (strcmp(p->cases[i+2][j+1], ". ") == 0 || strcmp(p->cases[i+2][j+1], "◽") == 0 || strcmp(p->cases[i+2][j+1], "◾") == 0) {
                     if (piece.joueur == BLANC) strcpy(p->cases[i+2][j+1], "◾");
                     else strcpy(p->cases[i+2][j+1], "◽");
+                    p->types_capture[i+2][j+1]=CAVALIER;
                 }
             }
             break;
@@ -284,6 +295,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 {
                     if (piece.joueur == BLANC) strcpy(p->cases[k-1][l-1],"◾");
                     else strcpy(p->cases[k-1][l-1] ,"◽");
+                    p->types_capture[k-1][l-1]=FOU;
                     k--;
                     l--;
                 }
@@ -297,6 +309,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 {
                     if (piece.joueur == BLANC) strcpy(p->cases[k + 1][l-1], "◾");
                     else strcpy(p->cases[k + 1][l-1], "◽");
+                    p->types_capture[k + 1][l-1]=FOU;
                     k++;
                     l--;
                 }
@@ -311,6 +324,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 {
                     if (piece.joueur == BLANC) strcpy(p->cases[k-1][l + 1], "◾");
                     else strcpy(p->cases[k-1][l + 1], "◽");
+                    p->types_capture[k-1][l + 1]=FOU;
                     k--;
                     l++;
                 }
@@ -324,6 +338,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 {
                     if (piece.joueur == BLANC) strcpy(p->cases[k+1][l + 1], "◾");
                     else strcpy(p->cases[k+1][l + 1], "◽");
+                    p->types_capture[k+1][l + 1]=FOU;
                     k++;
                     l++;
                 }
@@ -340,6 +355,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 {
                     if (piece.joueur == BLANC) strcpy(p->cases[k-1][j],"◾");
                     else strcpy(p->cases[k-1][j] ,"◽");
+                    p->types_capture[k-1][j]=DAME;
                     k--;
                 }
                 else break;
@@ -349,10 +365,9 @@ void deplacement(Plateau *p, Piece piece, Position position)
             {
                 if (strcmp(p->cases[k + 1][j], ". ") == 0 || strcmp(p->cases[k + 1][j], "◽") == 0 || strcmp(p->cases[k + 1][j], "◾") == 0)
                 {
-                    if (piece.joueur == BLANC)
-                        strcpy(p->cases[k + 1][j], "◾");
-                    else
-                        strcpy(p->cases[k + 1][j], "◽");
+                    if (piece.joueur == BLANC) strcpy(p->cases[k + 1][j], "◾");
+                    else strcpy(p->cases[k + 1][j], "◽");
+                    p->types_capture[k + 1][j]=DAME;
                     k++;
                 }
                 else break;
@@ -363,10 +378,9 @@ void deplacement(Plateau *p, Piece piece, Position position)
             {
                 if (strcmp(p->cases[i][k - 1], ". ") == 0 || strcmp(p->cases[i][k - 1], "◽") == 0 || strcmp(p->cases[i][k - 1], "◾") == 0)
                 {
-                    if (piece.joueur == BLANC)
-                        strcpy(p->cases[i][k - 1], "◾");
-                    else
-                        strcpy(p->cases[i][k - 1], "◽");
+                    if (piece.joueur == BLANC) strcpy(p->cases[i][k - 1], "◾");
+                    else strcpy(p->cases[i][k - 1], "◽");
+                    p->types_capture[i][k - 1]=DAME;
                     k--;
                 }
                 else break;
@@ -376,10 +390,9 @@ void deplacement(Plateau *p, Piece piece, Position position)
             {
                 if (strcmp(p->cases[i][k + 1], ". ") == 0 || strcmp(p->cases[i][k + 1], "◽") == 0 || strcmp(p->cases[i][k + 1], "◾") == 0)
                 {
-                    if (piece.joueur == BLANC)
-                        strcpy(p->cases[i][k + 1], "◾");
-                    else
-                        strcpy(p->cases[i][k + 1], "◽");
+                    if (piece.joueur == BLANC) strcpy(p->cases[i][k + 1], "◾");
+                    else strcpy(p->cases[i][k + 1], "◽");
+                    p->types_capture[i][k + 1]=DAME;
                     k++;
                 }
                 else break;
@@ -392,6 +405,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 {
                     if (piece.joueur == BLANC) strcpy(p->cases[k-1][l-1],"◾");
                     else strcpy(p->cases[k-1][l-1] ,"◽");
+                    p->types_capture[k-1][l-1]=DAME;
                     k--;
                     l--;
                 }
@@ -405,6 +419,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 {
                     if (piece.joueur == BLANC) strcpy(p->cases[k + 1][l-1], "◾");
                     else strcpy(p->cases[k + 1][l-1], "◽");
+                    p->types_capture[k + 1][l-1]=DAME;
                     k++;
                     l--;
                 }
@@ -419,6 +434,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 {
                     if (piece.joueur == BLANC) strcpy(p->cases[k-1][l + 1], "◾");
                     else strcpy(p->cases[k-1][l + 1], "◽");
+                    p->types_capture[k-1][l + 1]=DAME;
                     k--;
                     l++;
                 }
@@ -432,6 +448,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                 {
                     if (piece.joueur == BLANC) strcpy(p->cases[k+1][l + 1], "◾");
                     else strcpy(p->cases[k+1][l + 1], "◽");
+                    p->types_capture[k+1][l + 1]=DAME;
                     k++;
                     l++;
                 }
@@ -446,38 +463,36 @@ void deplacement(Plateau *p, Piece piece, Position position)
                     {
                         if (piece.joueur == BLANC) strcpy(p->cases[k-1][j],"◾");
                         else strcpy(p->cases[k-1][j] ,"◽");
+                        p->types_capture[k-1][j]=ROI;
                     }
                     k=i;
                     if (strcmp(p->cases[k + 1][j], ". ") == 0 || strcmp(p->cases[k + 1][j], "◽") == 0 || strcmp(p->cases[k + 1][j], "◾") == 0)
                     {
-                        if (piece.joueur == BLANC)
-                            strcpy(p->cases[k + 1][j], "◾");
-                        else
-                            strcpy(p->cases[k + 1][j], "◽");
+                        if (piece.joueur == BLANC) strcpy(p->cases[k + 1][j], "◾");
+                        else strcpy(p->cases[k + 1][j], "◽");
+                        p->types_capture[k + 1][j]=ROI;
                     }
                     k=j;
                     if (strcmp(p->cases[i][k - 1], ". ") == 0 || strcmp(p->cases[i][k - 1], "◽") == 0 || strcmp(p->cases[i][k - 1], "◾") == 0)
                     {
-                        if (piece.joueur == BLANC)
-                            strcpy(p->cases[i][k - 1], "◾");
-                        else
-                            strcpy(p->cases[i][k - 1], "◽");
+                        if (piece.joueur == BLANC) strcpy(p->cases[i][k - 1], "◾");
+                        else strcpy(p->cases[i][k - 1], "◽");
+                        p->types_capture[i][k - 1]=ROI;
                     }
                     k=j;
                     if (strcmp(p->cases[i][k + 1], ". ") == 0 || strcmp(p->cases[i][k + 1], "◽") == 0 || strcmp(p->cases[i][k + 1], "◾") == 0)
                     {
-                        if (piece.joueur == BLANC)
-                            strcpy(p->cases[i][k + 1], "◾");
-                        else
-                            strcpy(p->cases[i][k + 1], "◽");
+                        if (piece.joueur == BLANC) strcpy(p->cases[i][k + 1], "◾");
+                        else strcpy(p->cases[i][k + 1], "◽");
+                        p->types_capture[i][k + 1]=ROI;
                     }
-
                     k=i;
                     l=j;
                     if (strcmp(p->cases[k-1][l-1],". ") == 0 || strcmp(p->cases[k-1][l-1],"◽") == 0 || strcmp(p->cases[k-1][l-1],"◾")==0)
                     {
                         if (piece.joueur == BLANC) strcpy(p->cases[k-1][l-1],"◾");
                         else strcpy(p->cases[k-1][l-1] ,"◽");
+                        p->types_capture[k-1][l-1]=ROI;
                     }
                     k=i;
                     l=j;
@@ -485,14 +500,15 @@ void deplacement(Plateau *p, Piece piece, Position position)
                     {
                         if (piece.joueur == BLANC) strcpy(p->cases[k + 1][l-1], "◾");
                         else strcpy(p->cases[k + 1][l-1], "◽");
+                        p->types_capture[k + 1][l-1]=ROI;
                     }
-
                     k=i;
                     l=j;
                     if (strcmp(p->cases[k-1][l + 1], ". ") == 0 || strcmp(p->cases[k-1][l + 1], "◽") == 0 || strcmp(p->cases[k-1][l + 1], "◾") == 0)
                     {
                         if (piece.joueur == BLANC) strcpy(p->cases[k-1][l + 1], "◾");
                         else strcpy(p->cases[k-1][l + 1], "◽");
+                        p->types_capture[k-1][l + 1]=ROI;
                     }
                     k=i;
                     l=j;
@@ -500,6 +516,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
                     {
                         if (piece.joueur == BLANC) strcpy(p->cases[k+1][l + 1], "◾");
                         else strcpy(p->cases[k+1][l + 1], "◽");
+                        p->types_capture[k+1][l + 1]=ROI;
                     }
                     break;
                 };

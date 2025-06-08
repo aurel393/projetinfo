@@ -13,4 +13,6 @@ add_executable(projetinfo main.c
         conquete.c
         conquete.h
         sauvegarde.c
-        sauvegarde.h)
+        sauvegarde.h
+        connecte.c
+        connecte.h)

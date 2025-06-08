@@ -35,7 +35,7 @@ int mode(int *size) {
 
 int menu_jeu(Joueur j){
     int rep;
-    if (j==BLANC) printf("C'est au tour des blancs\n");
+    if (j==1) printf("C'est au tour des blancs\n");
     else printf("C'est au tour des noirs\n");
 
     printf("Que voulez vous faire ? \n");

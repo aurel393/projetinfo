@@ -39,7 +39,7 @@ int chargement(Plateau *p, int *joueur, int *mode, CompteurPiece *cpj1, Compteur
         return -1;
     }
     
-    // Lecture du plateau A MODIFIER NE RECHARGE PAS LES ESPACES APRES LES POINTS
+    // Lecture du plateau
     for (int i = 0; i < p->taille; i++) {
         for (int j = 0; j < p->taille; j++) {
             static char temp[10]; // buffer temporaire pour les symboles
@@ -53,6 +53,15 @@ int chargement(Plateau *p, int *joueur, int *mode, CompteurPiece *cpj1, Compteur
             p->cases[i][j] = strdup(temp);
         }
     }
+
+    for (int i = 0; i < p->taille; i++)
+    {
+        for (int j = 0; j < p->taille; j++)
+        {
+            fscanf(fichier, "d", p->types_capture[i][j]);
+        }
+    }
+
 
     // Lecture des compteurs du joueur 1
     for (int i = 0; i < 6; i++) {
@@ -100,6 +109,13 @@ int sauvegarde(Plateau *p, int joueurencours, int mode, CompteurPiece cpj1, Comp
     for (int i = 0; i < p->taille; i++) {
         for (int j = 0; j < p->taille; j++) {
             fprintf(fichier, "%s ", p->cases[i][j]);
+        }
+        fprintf(fichier, "\n");
+    }
+
+    for (int i = 0; i < p->taille; i++) {
+        for (int j = 0; j < p->taille; j++) {
+            fprintf(fichier, "%d ", p->types_capture[i][j]);
         }
         fprintf(fichier, "\n");
     }

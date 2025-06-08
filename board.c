@@ -16,6 +16,15 @@ void initialiser_plateau(Plateau* p)
     }
 }
 
+void initialiser_tableau_capture(Plateau *p)
+{
+    for (int i = 0; i < p->taille; i++) {
+        for (int j = 0; j < p->taille; j++) {
+            p->types_capture[i][j] = -1;
+        }
+    }
+}
+
 //La fonction suivante prends le type de la pièce (fou, cavalier...) et le joueur pour avoir la couleur
 //afin de faire correspondre le symbole au type de pièce et au joueur.
 
