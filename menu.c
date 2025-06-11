@@ -1,10 +1,25 @@
-//
-// Created by apinsell on 12/05/2025.
-//
+
 #include <stdio.h>
 #include "board.h"
 #include "menu.h"
 
+#include <stdlib.h>
+#ifdef WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+/**
+ * @brief Affiche le menu principal du jeu et lit le choix de l'utilisateur.
+ *
+ * Propose à l'utilisateur de démarrer une nouvelle partie, de reprendre une partie sauvegardée ou de quitter le jeu.
+ * Vérifie que l'utilisateur entre une valeur correcte (1, 2 ou 3).
+ *
+ * @return int Le choix de l'utilisateur :
+ * - 1 pour démarrer une partie
+ * - 2 pour reprendre une partie
+ * - 3 pour quitter
+ */
 int menu() {
     int rep,rep2;
     printf("-----------Menu-----------\n 1) Demarrer une partie\n 2) Reprendre une partie\n 3) Quitter\n"); //affichage du menu
@@ -15,7 +30,17 @@ int menu() {
     }
     return rep;
 }
-
+/**
+ * @brief Permet à l'utilisateur de choisir le mode de jeu et la taille du plateau.
+ *
+ * Deux modes de jeu sont disponibles : conquête ou connecté. Ensuite, l'utilisateur choisit une taille de plateau comprise entre 6x6 et 12x12.
+ * Les entrées sont validées pour éviter les valeurs incorrectes.
+ *
+ * @param size Pointeur vers un entier dans lequel sera stockée la taille du plateau choisie.
+ * @return int Le mode de jeu choisi :
+ * - 1 pour Conquête
+ * - 2 pour Connecté
+ */
 int mode(int *size) {
     int choix;
     printf("Quel mode de jeu voulez vous choisir ?\n 1) Conquete\n 2) Connecte\n");
@@ -32,7 +57,18 @@ int mode(int *size) {
     }
     return choix;
 }
-
+/**
+ * @brief Affiche le menu de jeu pour un joueur et récupère son choix.
+ *
+ * Ce menu s'affiche à chaque tour. Il permet au joueur courant (noir ou blanc) de poser une pièce, d’abandonner ou de sauvegarder la partie.
+ * La saisie est vérifiée pour garantir une valeur correcte.
+ *
+ * @param j Joueur courant (BLANC ou NOIR).
+ * @return int Le choix du joueur :
+ * - 1 pour poser une pièce
+ * - 2 pour abandonner
+ * - 3 pour sauvegarder la partie
+ */
 int menu_jeu(Joueur j){
     int rep;
     if (j==1) printf("C'est au tour des blancs\n");
@@ -51,4 +87,28 @@ int menu_jeu(Joueur j){
     if (rep == 3) printf("Sauvegarde en cours...\n");
     //fonction de sauvegarde
     return rep;
+}
+
+/**
+ * @brief Affiche un message sur l'utilisation des symboles unicode dans le programme
+ *
+ * Ce programme affichant des symboles unicode, certaines polices d'écritures ne les prennent pas en charge
+ * ou correctement sur les symboles utilisés, notamment les couleurs et le pion blanc.
+ * Le message invite donc l'utilisateur à modifier sa police d'écriture ou à lancer ce programme dans une console Linux le cas échéant.
+ *
+ */
+void message()
+{
+    printf("Bienvenue dans notre programme !\n\nDes caractères unicodes vont être affichés pour symboliser les pièces d'échecs et les cases capturées.\n");
+    printf("Pour bénéficier d'une expérience optimale, veuillez vous assurer que la police d'écriture de votre console ou de votre terminal est adapté à l'affichage de ceux-ci.\n\n");
+    printf("Le code a été testé pour s'afficher de manière optimale dans un terminal Linux. \n");
+    printf("Certaines polices affichent parfois les couleurs inverses de ce que dit le programme et le pion blanc est parfois représenté différement\n\n");
+    printf("Merci de votre compréhension ! \n");
+#ifdef WIN32//commandes différentes selon l'OS de l'utilisateur
+    Sleep(10000);
+    system("CLS");
+#else
+    sleep(10);
+    system("clear");
+#endif
 }

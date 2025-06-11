@@ -1,6 +1,3 @@
-//
-// Created by aurel on 22/05/25.
-//
 
 #include "conquete.h"
 #include <stdio.h>
@@ -59,7 +56,7 @@ void conquete(Plateau *p, int j1, CompteurPiece cpj1, CompteurPiece cpj2)
 
                     if(i==5)
                     {
-                        comptage(p);//tous les compteurs sont à 0 -> on compte les points
+                        comptage(p,0,cpj1,cpj2);//tous les compteurs sont à 0 -> on compte les points
                         exit=1;
                     }
                 }
@@ -90,29 +87,75 @@ void conquete(Plateau *p, int j1, CompteurPiece cpj1, CompteurPiece cpj2)
     }
     if (choix==3)
     {
-        sauvegarde(p,j,1,cpj1,cpj2);
+        if (sauvegarde(p, j,1,cpj1,cpj2) == -1) {
+            printf("Erreur lors du chargement de la partie.\n");
+        }
     }
 }
 
-
-void comptage(Plateau *p)
+/**
+ * @brief Calcule et affiche le score final des deux joueurs en fonction des cases capturées
+ *        et des pièces placées sur le plateau.
+ *
+ * Cette fonction compte le nombre de cases capturées sur l'ensemble du plateau.
+ * Ensuite, elle ajoute 16 points à chaque joueur pour représenter les pièces
+ * théoriquement disponibles au départ. En mode connecté (mode == 2), on soustrait le nombre de pièces
+ * restantes dans les compteurs pour tenir compte uniquement des pièces effectivement posées.
+ *
+ * @param p     Pointeur vers le plateau de jeu
+ * @param mode  Mode de jeu (si mode == 2, on utilise les compteurs pour affiner le score)
+ * @param cpj1  Compteur des pièces restantes pour le joueur 1 (BLANC)
+ * @param cpj2  Compteur des pièces restantes pour le joueur 2 (NOIR)
+ *
+ * @return      Aucun (la fonction affiche le résultat directement dans la console)
+ */
+void comptage(Plateau *p,int mode, CompteurPiece cpj1, CompteurPiece cpj2)
 {
     int blanc=0,noir=0;
     for (int i=0; i<p->taille; i++)
     {
         for (int j=0; j<p->taille; j++)
         {
-            if (strcmp(p->cases[i][j],"◽")==0) blanc++;
+            if (strcmp(p->cases[i][j],"◽")==0) blanc++;//on compte les cases capturées par les blancs puis par les noirs
             if (strcmp(p->cases[i][j],"◾")==0) noir++;
         }
     }
-    if (blanc>noir) printf("Bravo, les blancs ont gagnés avec %d points contre %d !!",blanc, noir);
-    else if (noir>blanc) printf("Bravo, les noirs ont gagnés avec %d points contre %d !!",noir,blanc);
-    else printf("égalité, les deux joueurs ont marqués %d points !!",blanc);
+
+    blanc=blanc+16;//on ajoute 16 peu importe le mode pour compter les pièces posés
+    noir=noir+16;
+
+    if (mode==2)//en mode connecte, comme toutes les pièces ne sont pas sûres d'être posées, on retire la valeur de chaque compteur
+    {
+        for (int i=0;i<6;i++)
+        {
+            blanc=blanc-cpj1.compt[i];
+            noir=noir-cpj2.compt[i];
+        }
+    }
+    if (blanc>noir) printf("Bravo, les blancs ont gagnés avec %d points contre %d !!\n",blanc, noir);
+    else if (noir>blanc) printf("Bravo, les noirs ont gagnés avec %d points contre %d !!\n",noir,blanc);
+    else printf("égalité, les deux joueurs ont marqués %d points !!\n",blanc);
 
 }
 
-
+/**
+ * @brief Met à jour le plateau en marquant les cases capturées par la pièce posée,
+ *        selon les règles spécifiques au type de pièce.
+ *
+ * Cette fonction analyse la position d'une pièce fraîchement posée et marque les cases
+ * autour (ou dans des directions particulières) comme capturées, en fonction du type de pièce.
+ * Ces cases sont ensuite identifiées visuellement
+ * sur le plateau par un symbole spécifique (◽ pour le joueur NOIR, ◾ pour le joueur BLANC),
+ * et leur type de capture est enregistré dans le tableau `types_capture`.
+ *
+ * Elle inclut aussi des vérifications de bornes pour éviter les débordements sur le plateau.
+ *
+ * @param p         Pointeur vers le plateau de jeu à modifier
+ * @param piece     La pièce jouée (inclut son type et son joueur)
+ * @param position  Position sur le plateau où la pièce a été placée
+ *
+ * @return          Aucun (les modifications sont faites directement sur le plateau)
+ */
 void deplacement(Plateau *p, Piece piece, Position position)
 {
     int i = position.ligne -1;
@@ -122,10 +165,12 @@ void deplacement(Plateau *p, Piece piece, Position position)
     {
     case PION:
         {
-            if (piece.joueur == NOIR)
+            if (piece.joueur == NOIR)//La seule difficulté pour cette pièece est la gestion des deux directions pour le pion en fonction de la couleur
             {
                 if (i>0)
-                {
+                {//la ligne de code suivante est présente de nombreuse fois: elle vérifie si la case est vide, blanche ou noir.
+                    //Dans ce cas, la fonction capture la case en fonction de la couleur, dans l'autre elle ne fait rien.
+                    //Nous aurions pu faire une fonction pour vérifier cette condition et l'utiliser dans tout le code mais nous y avons pensé à la fin.
                     if (strcmp(p->cases[i-1][j],". ") == 0 || strcmp(p->cases[i-1][j],"◽") == 0 || strcmp(p->cases[i-1][j],"◾")==0)
                     {
                         strcpy(p->cases[i-1][j],"◽");
@@ -149,7 +194,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
             break;
         };
 
-    case TOUR:
+    case TOUR://regarde les 4 positions sans dépasser les bornes du tableau et remplace les cases en fonction de la couleur.
         {
             k=i;
             while (k>0)
@@ -203,8 +248,8 @@ void deplacement(Plateau *p, Piece piece, Position position)
         break;
         };
 
-    case CAVALIER:
-        {
+    case CAVALIER://chacune des 8 positions est regardé pour savoir si elle est dans les bornes et si c'est une case vide.
+        {          // Faire une boucle aurait été une possibilité pour éviter le code répétitif mais nous n'avons pas trouvé de solution fiable.
             if (i + 1 < p->taille && j + 2 < p->taille)
             {
                 if (strcmp(p->cases[i+1][j+2],". ")==0 || strcmp(p->cases[i+1][j+2],"◽") == 0 || strcmp(p->cases[i+1][j+2],"◾")==0 )
@@ -285,7 +330,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
             }
             break;
         };
-    case FOU:
+    case FOU://structure du code semblable à la tour mais en diagonale.
         {
             k=i;
             l=j;
@@ -346,7 +391,7 @@ void deplacement(Plateau *p, Piece piece, Position position)
             }
             break;
         };
-    case DAME:
+    case DAME://Un mélange de la tour et du fou
         {
             k=i;
             while (k>0)
@@ -456,70 +501,30 @@ void deplacement(Plateau *p, Piece piece, Position position)
             }
                 break;
             };
-            case ROI:
-                {
-                    k=i;
-                    if (strcmp(p->cases[k-1][j],". ") == 0 || strcmp(p->cases[k-1][j],"◽") == 0 || strcmp(p->cases[k-1][j],"◾")==0)
-                    {
-                        if (piece.joueur == BLANC) strcpy(p->cases[k-1][j],"◾");
-                        else strcpy(p->cases[k-1][j] ,"◽");
-                        p->types_capture[k-1][j]=ROI;
+        case ROI: {//Nous avons fait un nouveau tableau avec les 8 coordonnées pour faire moins de lignes de code puis une boucle
+            // Coordonnées autour de la pièce (8 directions)
+            int dx[] = {-1, -1, -1,  0, 0, 1, 1, 1};
+            int dy[] = {-1,  0,  1, -1, 1, -1, 0, 1};
+
+            for (int dir = 0; dir < 8; dir++) {
+                int ni = i + dx[dir];
+                int nj = j + dy[dir];
+
+                // Vérifie que ni et nj sont dans les bornes du plateau
+                if (ni >= 0 && ni < p->taille && nj >= 0 && nj < p->taille) {
+                    if (strcmp(p->cases[ni][nj], ". ") == 0 || strcmp(p->cases[ni][nj], "◽") == 0 || strcmp(p->cases[ni][nj], "◾") == 0) {
+                        if (piece.joueur == BLANC)
+                            strcpy(p->cases[ni][nj], "◾");
+                        else
+                            strcpy(p->cases[ni][nj], "◽");
+
+                        p->types_capture[ni][nj] = ROI;
                     }
-                    k=i;
-                    if (strcmp(p->cases[k + 1][j], ". ") == 0 || strcmp(p->cases[k + 1][j], "◽") == 0 || strcmp(p->cases[k + 1][j], "◾") == 0)
-                    {
-                        if (piece.joueur == BLANC) strcpy(p->cases[k + 1][j], "◾");
-                        else strcpy(p->cases[k + 1][j], "◽");
-                        p->types_capture[k + 1][j]=ROI;
-                    }
-                    k=j;
-                    if (strcmp(p->cases[i][k - 1], ". ") == 0 || strcmp(p->cases[i][k - 1], "◽") == 0 || strcmp(p->cases[i][k - 1], "◾") == 0)
-                    {
-                        if (piece.joueur == BLANC) strcpy(p->cases[i][k - 1], "◾");
-                        else strcpy(p->cases[i][k - 1], "◽");
-                        p->types_capture[i][k - 1]=ROI;
-                    }
-                    k=j;
-                    if (strcmp(p->cases[i][k + 1], ". ") == 0 || strcmp(p->cases[i][k + 1], "◽") == 0 || strcmp(p->cases[i][k + 1], "◾") == 0)
-                    {
-                        if (piece.joueur == BLANC) strcpy(p->cases[i][k + 1], "◾");
-                        else strcpy(p->cases[i][k + 1], "◽");
-                        p->types_capture[i][k + 1]=ROI;
-                    }
-                    k=i;
-                    l=j;
-                    if (strcmp(p->cases[k-1][l-1],". ") == 0 || strcmp(p->cases[k-1][l-1],"◽") == 0 || strcmp(p->cases[k-1][l-1],"◾")==0)
-                    {
-                        if (piece.joueur == BLANC) strcpy(p->cases[k-1][l-1],"◾");
-                        else strcpy(p->cases[k-1][l-1] ,"◽");
-                        p->types_capture[k-1][l-1]=ROI;
-                    }
-                    k=i;
-                    l=j;
-                    if (strcmp(p->cases[k + 1][l-1], ". ") == 0 || strcmp(p->cases[k + 1][l-1], "◽") == 0 || strcmp(p->cases[k + 1][l-1], "◾") == 0)
-                    {
-                        if (piece.joueur == BLANC) strcpy(p->cases[k + 1][l-1], "◾");
-                        else strcpy(p->cases[k + 1][l-1], "◽");
-                        p->types_capture[k + 1][l-1]=ROI;
-                    }
-                    k=i;
-                    l=j;
-                    if (strcmp(p->cases[k-1][l + 1], ". ") == 0 || strcmp(p->cases[k-1][l + 1], "◽") == 0 || strcmp(p->cases[k-1][l + 1], "◾") == 0)
-                    {
-                        if (piece.joueur == BLANC) strcpy(p->cases[k-1][l + 1], "◾");
-                        else strcpy(p->cases[k-1][l + 1], "◽");
-                        p->types_capture[k-1][l + 1]=ROI;
-                    }
-                    k=i;
-                    l=j;
-                    if (strcmp(p->cases[k+1][l + 1], ". ") == 0 || strcmp(p->cases[k+1][l + 1], "◽") == 0 || strcmp(p->cases[k+1][l + 1], "◾") == 0)
-                    {
-                        if (piece.joueur == BLANC) strcpy(p->cases[k+1][l + 1], "◾");
-                        else strcpy(p->cases[k+1][l + 1], "◽");
-                        p->types_capture[k+1][l + 1]=ROI;
-                    }
-                    break;
-                };
+                }
+            }
+            break;
+    }
+
             default: break;
         }
     }

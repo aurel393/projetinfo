@@ -9,6 +9,6 @@
 
 void deplacement(Plateau *p, Piece piece, Position position);
 void conquete(Plateau *p, int j1, CompteurPiece cpj1, CompteurPiece cpj2);
-void comptage(Plateau *p);
+void comptage(Plateau *p, int mode, CompteurPiece cpj1, CompteurPiece cpj2);
 
 #endif //CONQUETE_H

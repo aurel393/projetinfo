@@ -1,55 +1,58 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "menu.h"
 #include <time.h>
+#include "menu.h"
 #include "board.h"
 #include "connecte.h"
 #include "sauvegarde.h"
 #include "conquete.h"
 
 
+/**
+ * @brief Fonction principale du programme du jeu.
+ *
+ * Affiche le menu, gère le choix de l’utilisateur (nouvelle partie, chargement, quitter),
+ * initialise les structures nécessaires et lance le jeu en mode "conquête" ou "connecté".
+ *
+ * @return int 0 si exécution correcte, 1 en cas d'erreur ou si l'utilisateur quitte.
+ */
 int main(void) {
     srand(time(0));
-    int reponse,size,user,modejeu;
-    int *s = &size;
+
+    int choix_menu, taille_plateau, joueur_actuel, mode_jeu;
     Plateau p;
-    FILE *save;
-    CompteurPiece cpj1,cpj2;
+    CompteurPiece cpj1, cpj2;
 
-    reponse= menu(); //demande à l'utilisateur son choix
+    message();//affiche un message pour l'utilisateur sur l'utilisation des symboles unicode
 
+    choix_menu = menu();
 
-    if (reponse !=3)// si on veut jouer une partie : en démarrer une nouvelle ou en charger une
-    {
-        if (reponse ==1) //quand on veut commmencer une nouvelle partie
-        {
-            modejeu = mode(s); //récupère le mode de jeu et la taille du plateau si l'utilisateur a choisi de jouer
-            user = rand()%2; //défini aléatoirement quel joueur commmence
-            p.taille = size;
+    if (choix_menu != 3) {
+        if (choix_menu == 1) {//si on commence on nouvelle partie on demande à l'utilisateur ce qu'il veut faire et on initialise les plateaux, compteurs de pièces...
+            mode_jeu = mode(&taille_plateau);
+            joueur_actuel = rand()% 2;
+            p.taille = taille_plateau;
             initialiser_plateau(&p);
             initialiser_tableau_capture(&p);
             initialiser_compteur(&cpj1);
             initialiser_compteur(&cpj2);
-        }
-        else
-        {
-            chargement(&p, &user, &modejeu, &cpj1,&cpj2); //quand on veut charger une partie
+        } else {//si on charge une partie la fonction chargement() le fait toute seule
+            if (chargement(&p, &joueur_actuel, &mode_jeu, &cpj1, &cpj2) == -1) {
+                printf("Erreur lors du chargement de la partie.\n");
+                return 1;
+            }
             afficher_plateau(p);
         }
-        if (modejeu ==1)
-            {
-            conquete(&p,user, cpj1, cpj2);
-            }
-        if (modejeu == 2)
-        {
-            connecte(&p,user,cpj1,cpj2);
-        }
 
-    }
-    else
-    {
+        if (mode_jeu == 1) conquete(&p, joueur_actuel, cpj1, cpj2);
+        else connecte(&p, joueur_actuel, cpj1, cpj2);
+
+        // Libération mémoire
+        liberer_plateau(&p);
+    } else {
         printf("Au revoir !\n");
-        return 1; //si l'utilisateur a choisi de quitter, on sort du programme
+        return 1;
     }
+
     return 0;
 }

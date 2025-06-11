@@ -18,11 +18,12 @@ void connecte(Plateau *p, int j1,CompteurPiece cpj1, CompteurPiece cpj2 )
     Joueur j=conversion_joueur(j1);
     Position pos1;
     char saisie[10];
-    int choix=menu_jeu(j),exit=0;
+    int exit=0, choix=menu_jeu(j),verif=-1;
 
     while (choix==1)
     {
-        while (verification(p,piece,j,pos1,cpj1,cpj2)==-1)
+
+        while (verif==-1)
         {
             do
             {
@@ -32,7 +33,7 @@ void connecte(Plateau *p, int j1,CompteurPiece cpj1, CompteurPiece cpj2 )
             }while (type==-1); //demande de la saisie de la pièce avec vérification
             piece.type=type;
             piece.joueur=j;
-            definir_symbole(&piece);
+            definir_symbole(&piece);//inscrit l'emoji correspondant à la pièce suivant le nom entré par l'utilisateur
 
             //les lignes suivantes vérifient et mettent à jour les coordonnées entrées par l'utilisateur
             do {
@@ -44,6 +45,7 @@ void connecte(Plateau *p, int j1,CompteurPiece cpj1, CompteurPiece cpj2 )
                 printf("Entrez la colonne (1 à %d) : ", p->taille);
                 scanf("%d", &pos1.colonne);
             } while (pos1.colonne < 1 || pos1.colonne > p->taille);
+            verif=verification(p,piece,j,pos1,cpj1,cpj2);
         }
 
         strcpy(p->cases[pos1.ligne-1][pos1.colonne-1], piece.symbole);//met à jour le plateau
@@ -51,16 +53,18 @@ void connecte(Plateau *p, int j1,CompteurPiece cpj1, CompteurPiece cpj2 )
         if (j==BLANC) compteur(&cpj1,piece.type);//met à jour le compteur en fonction du joueur
         else compteur(&cpj2,piece.type);
         afficher_plateau(*p);
-        if (cpj1.compt[ROI]==0 || cpj2.compt[ROI]==0)
+
+        if (cpj1.compt[ROI]==0 || cpj2.compt[ROI]==0)//si un des joueurs pose son roi, on compte les points
         {
-            comptage(p);
+            comptage(p,2,cpj1,cpj2);
             exit=1;
         }
+
         if (exit==1) break;
         if (j==BLANC) j=NOIR;
         else j=BLANC;
         choix=menu_jeu(j);
-
+        verif=-1;
     }
     if (choix==2)
     {
@@ -69,9 +73,25 @@ void connecte(Plateau *p, int j1,CompteurPiece cpj1, CompteurPiece cpj2 )
     }
     if (choix==3)
     {
-        sauvegarde(p,j,1,cpj1,cpj2);
+        if (sauvegarde(p, j,2,cpj1,cpj2) == -1) {
+            printf("Erreur lors du chargement de la partie.\n");
+        }
     }
 }
+
+
+/**
+ * Fonction qui vérifie si une pièce peut être placée sur le plateau dans le mode Connecte.
+ *
+ * @param p     Pointeur vers le plateau de jeu
+ * @param piece La pièce à placer
+ * @param j     Le joueur (BLANC ou NOIR)
+ * @param pos1  La position où la pièce doit être placée
+ * @param cpj1  Compteur de pièces du joueur 1
+ * @param cpj2  Compteur de pièces du joueur 2
+ *
+ * @return 1 si la pièce peut être placée, -1 sinon
+ */
 
 int verification(Plateau *p,Piece piece, Joueur j, Position pos1,CompteurPiece cpj1,CompteurPiece cpj2)
 {
