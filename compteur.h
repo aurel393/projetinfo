@@ -1,6 +1,3 @@
-//
-// Created by aurel on 22/05/25.
-//
 
 #ifndef COMPTEUR_H
 #define COMPTEUR_H

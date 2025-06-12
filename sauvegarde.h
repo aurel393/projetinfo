@@ -1,6 +1,3 @@
-//
-// Created by aurel on 23/05/25.
-//
 
 #ifndef SAUVEGARDE_H
 #define SAUVEGARDE_H

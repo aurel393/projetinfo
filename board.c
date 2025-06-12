@@ -1,8 +1,6 @@
-//tout ce qui gère le plateau: structures des pièces et fonctions comme afficher, initialiser, convertir...
 
 #include <stdio.h>
 #include "board.h"
-
 #include <stdlib.h>
 #include <string.h>
 

@@ -1,7 +1,3 @@
-//
-// Created by aurel on 22/05/25.
-//
-#include <stdio.h>
 #include "board.h"
 #include "compteur.h"
 

@@ -41,6 +41,7 @@ int main(void) {
                 printf("Erreur lors du chargement de la partie.\n");
                 return 1;
             }
+            printf("Partie chargée avec succès !\n");
             afficher_plateau(p);
         }
 

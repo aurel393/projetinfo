@@ -1,7 +1,3 @@
-//
-// Created by aurel on 07/06/25.
-//
-
 #ifndef CONNECTE_H
 #define CONNECTE_H
 #include"board.h"

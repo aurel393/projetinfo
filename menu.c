@@ -4,6 +4,7 @@
 #include "menu.h"
 
 #include <stdlib.h>
+#include <string.h>
 #ifdef WIN32
 #include <windows.h>
 #else
@@ -90,25 +91,49 @@ int menu_jeu(Joueur j){
 }
 
 /**
- * @brief Affiche un message sur l'utilisation des symboles unicode dans le programme
+ * @brief Affiche un message sur l'utilisation des symboles unicode dans le programme.
  *
  * Ce programme affichant des symboles unicode, certaines polices d'écritures ne les prennent pas en charge
  * ou correctement sur les symboles utilisés, notamment les couleurs et le pion blanc.
- * Le message invite donc l'utilisateur à modifier sa police d'écriture ou à lancer ce programme dans une console Linux le cas échéant.
+ * La fonction demande également si l'utilisateur veut ou non revoir ce message ou prochain lancement.
+ * Il stocke son choix dans un fichier .txt qu'il consulte avant d'afficher le message.
  *
  */
 void message()
 {
+    FILE *config = fopen("config.txt", "r");
+    char buffer[10];
+
+    if (config != NULL) {
+        fgets(buffer, sizeof(buffer), config);
+        fclose(config);
+        if (strcmp(buffer, "no\n") == 0 || strcmp(buffer, "no") == 0) {
+            return; // Ne pas afficher le message
+        }
+    }
+
     printf("Bienvenue dans notre programme !\n\nDes caractères unicodes vont être affichés pour symboliser les pièces d'échecs et les cases capturées.\n");
     printf("Pour bénéficier d'une expérience optimale, veuillez vous assurer que la police d'écriture de votre console ou de votre terminal est adapté à l'affichage de ceux-ci.\n\n");
     printf("Le code a été testé pour s'afficher de manière optimale dans un terminal Linux. \n");
     printf("Certaines polices affichent parfois les couleurs inverses de ce que dit le programme et le pion blanc est parfois représenté différement\n\n");
     printf("Merci de votre compréhension ! \n");
+
 #ifdef WIN32//commandes différentes selon l'OS de l'utilisateur
-    Sleep(10000);
-    system("CLS");
+    Sleep(5000);
 #else
-    sleep(10);
-    system("clear");
+    sleep(5);
 #endif
+
+    printf("Souhaitez-vous revoir ce message au prochain lancement ? (o/n) : ");
+    char rep;
+    scanf(" %c", &rep);
+    config = fopen("config.txt", "w");
+    if (config != NULL) {
+        if (rep == 'n' || rep == 'N') {
+            fprintf(config, "no\n");
+        } else {
+            fprintf(config, "yes\n");
+        }
+        fclose(config);
+    }
 }

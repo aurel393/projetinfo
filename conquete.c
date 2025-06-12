@@ -19,7 +19,7 @@ void conquete(Plateau *p, int j1, CompteurPiece cpj1, CompteurPiece cpj2)
     {
         do
         {
-            printf("Quelle pièce voulez vous placer ? \n");
+            printf("Quelle pièce voulez vous placer (ex: pion, tour...)? \n");
             scanf("%9s", saisie);  // lis une chaîne de 9 caracteres + \0
             type= conversion_type(saisie);
         }while (type==-1); //demande de la saisie de la pièce avec vérification
