@@ -149,5 +149,3 @@ void liberer_plateau(Plateau *p) {
         }
     }
 }
-
-

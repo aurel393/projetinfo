@@ -167,26 +167,44 @@ void deplacement(Plateau *p, Piece piece, Position position)
         {
             if (piece.joueur == NOIR)//La seule difficulté pour cette pièece est la gestion des deux directions pour le pion en fonction de la couleur
             {
-                if (i>0)
+                if (i>0 && j>0)
                 {//la ligne de code suivante est présente de nombreuse fois: elle vérifie si la case est vide, blanche ou noir.
                     //Dans ce cas, la fonction capture la case en fonction de la couleur, dans l'autre elle ne fait rien.
                     //Nous aurions pu faire une fonction pour vérifier cette condition et l'utiliser dans tout le code mais nous y avons pensé à la fin.
-                    if (strcmp(p->cases[i-1][j],". ") == 0 || strcmp(p->cases[i-1][j],"◽") == 0 || strcmp(p->cases[i-1][j],"◾")==0)
+                    if (strcmp(p->cases[i-1][j-1],". ") == 0 || strcmp(p->cases[i-1][j-1],"◽") == 0 || strcmp(p->cases[i-1][j-1],"◾")==0)
                     {
-                        strcpy(p->cases[i-1][j],"◽");
-                        p->types_capture[i-1][j]=PION;
+                        strcpy(p->cases[i-1][j-1],"◽");
+                        p->types_capture[i-1][j-1]=PION;
+                    }
+                    else break;
+                }
+                if (i>0 && j+1<p->taille-1)
+                {
+                    if (strcmp(p->cases[i-1][j+1],". ") == 0 || strcmp(p->cases[i-1][j+1],"◽") == 0 || strcmp(p->cases[i-1][j+1],"◾")==0)
+                    {
+                        strcpy(p->cases[i-1][j+1],"◽");
+                        p->types_capture[i-1][j+1]=PION;
                     }
                     else break;
                 }
             }
             else
             {
-                if (i+1<p->taille-1)
+                if (i+1<p->taille-1 && j+1<p->taille-1)
                 {
-                    if (strcmp(p->cases[i + 1][j], ". ") == 0 || strcmp(p->cases[i + 1][j], "◽") == 0 || strcmp(p->cases[i + 1][j], "◾") == 0)
+                    if (strcmp(p->cases[i + 1][j+1], ". ") == 0 || strcmp(p->cases[i + 1][j+1], "◽") == 0 || strcmp(p->cases[i + 1][j+1], "◾") == 0)
                     {
-                        strcpy(p->cases[i + 1][j], "◾");
-                        p->types_capture[i+1][j]=PION;
+                        strcpy(p->cases[i + 1][j+1], "◾");
+                        p->types_capture[i+1][j+1]=PION;
+                    }
+                    else break;
+                }
+                if (i+1<p->taille-1 && j-1>0)
+                {
+                    if (strcmp(p->cases[i + 1][j-1], ". ") == 0 || strcmp(p->cases[i + 1][j-1], "◽") == 0 || strcmp(p->cases[i + 1][j-1], "◾") == 0)
+                    {
+                        strcpy(p->cases[i + 1][j-1], "◾");
+                        p->types_capture[i+1][j-1]=PION;
                     }
                     else break;
                 }
